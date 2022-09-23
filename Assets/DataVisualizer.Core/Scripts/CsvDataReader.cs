@@ -1,18 +1,37 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class CsvDataReader : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private const string DefaultFileName = "Data.csv";
+    [SerializeField] private string filePath;
+
+    private void Start()
     {
+        if (filePath == string.Empty)
+        {
+            filePath = Path.Combine(Application.persistentDataPath ,DefaultFileName);
+        }
         
+        ReadFile();
     }
 
-    // Update is called once per frame
-    void Update()
+    private async void ReadFile()
     {
+        using StreamReader reader = new StreamReader(filePath);
+        string data = await reader.ReadToEndAsync();
+        ConvertToData(data);
+    }
+
+    private void ConvertToData(string data)
+    {
+        string[] rows = data.Split('\n');
+        string[] headerColumns = rows[0].Split(',');
         
+        for (int i = 1; i < rows.Length; i++) 
+        {
+            string[] row = rows[i].Split(',');
+
+        }
     }
 }
