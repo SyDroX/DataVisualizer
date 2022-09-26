@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -25,13 +26,26 @@ public class CsvDataReader : MonoBehaviour
 
     private void ConvertToData(string data)
     {
-        string[] rows = data.Split('\n');
-        string[] headerColumns = rows[0].Split(',');
+        string[] rows = data.Split('\r', '\n');
+        string[] headers = rows[0].Split(',');
         
-        for (int i = 1; i < rows.Length; i++) 
+        Dictionary<string, List<string>> formattedData = new Dictionary<string, List<string>>();
+        
+        for (int i = 0; i < headers.Length; i++) 
         {
-            string[] row = rows[i].Split(',');
-
+            formattedData.Add(headers[i], new List<string>());
         }
+        
+        for (int i = 1; i < rows.Length; i++)
+        {
+            string[] columns = rows[i].Split(',');
+            
+            for (int j = 0; j < columns.Length; j++)
+            {
+                formattedData[headers[j]].Add(columns[j]);
+            }
+        }
+        
+        
     }
 }
