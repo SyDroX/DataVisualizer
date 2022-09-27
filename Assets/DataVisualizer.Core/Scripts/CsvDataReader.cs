@@ -1,51 +1,58 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class CsvDataReader : MonoBehaviour
 {
     private const string DefaultFileName = "Data.csv";
-    [SerializeField] private string filePath;
 
-    private void Start()
+    private Dictionary<string, List<string>> _dataGroups;
+    private bool _dataReady;
+    
+    [SerializeField] private string _filePath;
+
+    private async Task ReadFile()
     {
-        if (filePath == string.Empty)
+        if (_filePath == string.Empty)
         {
-            filePath = Path.Combine(Application.persistentDataPath ,DefaultFileName);
+            _filePath = Path.Combine(Application.persistentDataPath, DefaultFileName);
         }
         
-        ReadFile();
-    }
-
-    private async void ReadFile()
-    {
-        using StreamReader reader = new StreamReader(filePath);
+        using StreamReader reader = new StreamReader(_filePath);
         string data = await reader.ReadToEndAsync();
         ConvertToData(data);
     }
 
-    private void ConvertToData(string data)
+    private void ConvertToData(string csvData)
     {
-        string[] rows = data.Split('\r', '\n');
-        string[] headers = rows[0].Split(',');
-        
-        Dictionary<string, List<string>> formattedData = new Dictionary<string, List<string>>();
-        
-        for (int i = 0; i < headers.Length; i++) 
+        string[] rows = csvData.Split("\r\n");
+        string[] groups = rows[0].Split(',');
+        _dataGroups = new Dictionary<string, List<string>>();
+
+        foreach (string group in groups)
         {
-            formattedData.Add(headers[i], new List<string>());
+            _dataGroups.Add(group, new List<string>());
         }
-        
+
         for (int i = 1; i < rows.Length; i++)
         {
-            string[] columns = rows[i].Split(',');
-            
-            for (int j = 0; j < columns.Length; j++)
+            string[] rowColumns = rows[i].Split(',');
+
+            for (int j = 0; j < rowColumns.Length; j++)
             {
-                formattedData[headers[j]].Add(columns[j]);
+                _dataGroups[groups[j]].Add(rowColumns[j]);
             }
         }
-        
-        
+    }
+
+    public async Task<Dictionary<string, List<string>>> GetData()
+    {
+        if (!_dataReady)
+        {
+            await ReadFile();
+        }
+
+        return _dataGroups;
     }
 }
