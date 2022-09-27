@@ -44,6 +44,8 @@ public class CsvDataReader : MonoBehaviour
                 _dataGroups[groups[j]].Add(rowColumns[j]);
             }
         }
+
+        _dataReady = true;
     }
 
     public async Task<Dictionary<string, List<string>>> GetData()
