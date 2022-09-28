@@ -13,7 +13,7 @@ namespace DataVisualizer.Core.Scripts
         [SerializeField] private DataOrganizer _dataOrganizer;
         [SerializeField] private GameObject _visualizationRoot;
         [SerializeField] private float _zDelta;
-        [SerializeField] private float _layerPlaneSizeMultiplier;
+        [SerializeField] private float _layerSizeMultiplier = 1;
         [SerializeField] private float _minumDistanceBetweenObjects;
         
         private void Start()
@@ -49,7 +49,7 @@ namespace DataVisualizer.Core.Scripts
 
         private async Task<Vector2> GeneratePositionInLayer(List<Vector2> usedPositions)
         {
-            float range = await _dataOrganizer.GetUniqueDataGroupsCountInLayer(_currentLayerNumber) * _layerPlaneSizeMultiplier;
+            float range = await _dataOrganizer.GetUniqueDataGroupsCountInLayer(_currentLayerNumber) * _layerSizeMultiplier;
             Vector2 position = new Vector2(Random.Range(-range, range), Random.Range(-range, range));
             bool objectsTooClose = ObjectsTooClose(usedPositions, position);
 
