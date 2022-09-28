@@ -75,15 +75,22 @@ namespace DataVisualizer.Core.Scripts
             return false;
         }
         
-        private GameObject CreateNodeGameObject(string nodeName, Transform parent)
+        private GameObject CreateNodeGameObject(string nodeName, GameObject parent, Vector2 position, bool isTopLevelNode)
         {
-            GameObject nodeInstance = Instantiate(_visualizerPrefab, parent);
+            Vector3 nodePosition = new Vector3(position.x, position.y, _currentLayerNumber * _zDelta);
+            GameObject nodeInstance = Instantiate(_visualizerPrefab,nodePosition,Quaternion.identity, parent.transform);
             nodeInstance.name = nodeName;
-            //TextChanger textChanger = nodeInstance.GetComponent<TextChanger>();
-            //textChanger.ChangeText(nodeName);
+            TextChanger textChanger = nodeInstance.GetComponent<TextChanger>();
+            textChanger.ChangeText(nodeName);
+            
+            if (!isTopLevelNode)
+            {
+                DrawLineBetweenObjects(parent,nodeInstance);
+            }
 
             return nodeInstance;
         }
+
         private void DrawLineBetweenObjects(GameObject source, GameObject target)
         {
             LineRenderer nodeLinkLine = target.AddComponent<LineRenderer>();
