@@ -1,6 +1,5 @@
 using DataVisualizer.Core.Scripts;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class LayerOrderUI : MonoBehaviour
@@ -11,9 +10,8 @@ public class LayerOrderUI : MonoBehaviour
     [SerializeField] private GameObject _layerPrefab;
     [SerializeField] private Button _showButton;
     [SerializeField] private Button _hideButton;
+    [SerializeField] private LayerOrderHandler _layerOrder;
 
-    public UnityEvent<string[]> onLayersReordered;
-    
     private void Start()
     {
         ShowLayers();
@@ -43,7 +41,7 @@ public class LayerOrderUI : MonoBehaviour
             newLayerOrder[i] = _layerSortingPanel.transform.GetChild(i).name;
         }
         
-        onLayersReordered?.Invoke(newLayerOrder);
+        _layerOrder.onLayersReordered?.Invoke(newLayerOrder);
     }
     
 }
