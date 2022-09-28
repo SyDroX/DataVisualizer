@@ -6,10 +6,15 @@ namespace DataVisualizer.Core.Scripts
     public class GameObjectVisualizer : MonoBehaviour
     {
         private List<GameObject> _rootNodes = new List<GameObject>();
-
+        private List<List<Vector2>> _layerPositions;
+        private int _currentLayerNumber;
+        
         [SerializeField] private GameObject _visualizerPrefab;
         [SerializeField] private DataOrganizer _dataOrganizer;
         [SerializeField] private GameObject _visualizationRoot;
+        [SerializeField] private float _zDelta;
+        [SerializeField] private float _layerPlaneSizeMultiplier;
+        [SerializeField] private float _minumDistanceBetweenObjects;
         
         private void Start()
         {
@@ -38,6 +43,36 @@ namespace DataVisualizer.Core.Scripts
             }
             
             _rootNodes.Clear();
+            _currentLayerNumber = 0;
+            _layerPositions = new List<List<Vector2>>();
+        }
+
+        private async Task<Vector2> GeneratePositionInLayer(List<Vector2> usedPositions)
+        {
+            float range = await _dataOrganizer.GetUniqueDataGroupsCountInLayer(_currentLayerNumber) * _layerPlaneSizeMultiplier;
+            Vector2 position = new Vector2(Random.Range(-range, range), Random.Range(-range, range));
+            bool objectsTooClose = ObjectsTooClose(usedPositions, position);
+
+            while (objectsTooClose)
+            {
+                position = new Vector2(Random.Range(-range, range), Random.Range(-range, range));
+                objectsTooClose = ObjectsTooClose(usedPositions, position);
+            }
+
+            return position;
+        }
+
+        private bool ObjectsTooClose(List<Vector2> usedPositions, Vector2 position)
+        {
+            foreach (Vector2 usedPosition in usedPositions)
+            {
+                if (Vector2.Distance(position, usedPosition) < _minumDistanceBetweenObjects)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
         
         private GameObject CreateNodeGameObject(string nodeName, Transform parent)
