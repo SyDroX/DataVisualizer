@@ -21,12 +21,7 @@ namespace DataVisualizer.Core.Scripts
             foreach (string nodeName in organizedData.Keys)
             {
                 GameObject nodeInstance = CreateNodeGameObject(nodeName, _visualizationRoot.transform);
-
-                foreach (string childNodeName in organizedData[nodeName].Children.Keys)
-                {
-                    GameObject childNodeInstance = CreateNodeGameObject(childNodeName, nodeInstance.transform);
-                    VisualizeNode(organizedData[nodeName].Children[childNodeName], childNodeInstance);
-                }
+                VisualizeNode(organizedData[nodeName], nodeInstance);
             }
         }
 
@@ -45,11 +40,7 @@ namespace DataVisualizer.Core.Scripts
             foreach (string childNodeName in rootNode.Children.Keys)
             {
                 GameObject nodeInstance = CreateNodeGameObject(childNodeName, rootGameObject.transform);
-                
-                foreach (Node childNode in rootNode.Children.Values)
-                {
-                    VisualizeNode(childNode, nodeInstance);
-                }
+                VisualizeNode(rootNode.Children[childNodeName], nodeInstance);
             }
         }
         
