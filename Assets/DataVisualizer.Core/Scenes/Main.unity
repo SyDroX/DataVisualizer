@@ -1427,9 +1427,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1addebb6fc4549fdbc371549dd1c4502, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _visualizerPrefab: {fileID: 480338365691341619, guid: e7f63c2274a0c8f4bbef9062faaf0750, type: 3}
+  _visualizerPrefab: {fileID: 480338365691341619, guid: 8e2c6ed50b2fb4b40977fc838baf7712, type: 3}
   _dataOrganizer: {fileID: 125103343}
   _visualizationRoot: {fileID: 1846786273}
+  _zDelta: 5
+  _layerSizeMultiplier: 1
+  _minumDistanceBetweenObjects: 2
 --- !u!4 &1919918118
 Transform:
   m_ObjectHideFlags: 0
