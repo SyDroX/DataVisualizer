@@ -28,10 +28,16 @@ namespace DataVisualizer.Core.Scripts
         {
             DestroyVisualization();
             Dictionary<string, Node> organizedData = await _dataOrganizer.GetOrganizedData();
-                    
+            _layerPositions.Add(new List<Vector2>(organizedData.Keys.Count));
+            
             foreach (string nodeName in organizedData.Keys)
             {
-                GameObject nodeInstance = CreateNodeGameObject(nodeName, _visualizationRoot.transform);
+                Vector2 position = await GeneratePositionInLayer(_layerPositions[_currentLayerNumber]);
+                _layerPositions[_currentLayerNumber].Add(position);
+                GameObject nodeInstance = CreateNodeGameObject(nodeName, 
+                                                               _visualizationRoot,
+                                                               position, 
+                                                               true);
                 _rootNodes.Add(nodeInstance);
                 VisualizeNode(organizedData[nodeName], nodeInstance);
             }
@@ -103,13 +109,28 @@ namespace DataVisualizer.Core.Scripts
             nodeLinkLine.material.color = Color.black;
         }
         
-        private void VisualizeNode(Node rootNode, GameObject rootGameObject)
+        
+        private async void VisualizeNode(Node rootNode, GameObject rootGameObject)
         {
+            _currentLayerNumber++;
+            
+            if (_layerPositions.Count - 1 < _currentLayerNumber)
+            {
+                _layerPositions.Add(new List<Vector2>());
+            }
+            
             foreach (string childNodeName in rootNode.Children.Keys)
             {
-                GameObject nodeInstance = CreateNodeGameObject(childNodeName, rootGameObject.transform);
+                Vector2 position = await GeneratePositionInLayer(_layerPositions[_currentLayerNumber]);
+                _layerPositions[_currentLayerNumber].Add(position);
+                GameObject nodeInstance = CreateNodeGameObject(childNodeName, 
+                                                               rootGameObject, 
+                                                               position,
+                                                               false);
                 VisualizeNode(rootNode.Children[childNodeName], nodeInstance);
             }
+
+            _currentLayerNumber--;
         }
         
     }
