@@ -21,13 +21,13 @@ namespace DataVisualizer.Core.Scripts
         private Dictionary<string, Node> _organizedData;
         
         [SerializeField] private CsvDataReader _csvDataReader;
-        [SerializeField] private LayerOrderUI _layerOrderUI;
+        [SerializeField] private LayerOrderHandler _layerOrderHandler;
 
         public UnityEvent onLayersReordered;
         
         private void Start()
         {
-            _layerOrderUI.onLayersReordered.AddListener(OnLayersReordered);
+            _layerOrderHandler.onLayersReordered.AddListener(OnLayersReordered);
         }
         
         private void OnLayersReordered(string[] newLayerOrder)
