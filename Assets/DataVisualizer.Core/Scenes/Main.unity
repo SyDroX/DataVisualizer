@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _csvDataReader: {fileID: 832485232}
-  _layerOrderHandler: {fileID: 0}
+  _layerOrderHandler: {fileID: 1849851997}
   onLayersReordered:
     m_PersistentCalls:
       m_Calls: []
@@ -1359,6 +1359,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1849851996}
+  - component: {fileID: 1849851997}
   m_Layer: 0
   m_Name: LayersOrder
   m_TagString: Untagged
@@ -1381,6 +1382,21 @@ Transform:
   m_Father: {fileID: 603921571}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1849851997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1849851995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75faa2e05d7d485b868a09a9bfe3a20c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onLayersReordered:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1919918116
 GameObject:
   m_ObjectHideFlags: 0
