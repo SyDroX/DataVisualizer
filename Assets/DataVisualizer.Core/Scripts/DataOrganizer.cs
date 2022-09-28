@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace DataVisualizer.Core.Scripts
@@ -11,14 +12,12 @@ namespace DataVisualizer.Core.Scripts
     
     public class DataOrganizer : MonoBehaviour
     {
+        private bool _dataOrganized;
+        private Dictionary<string, Node> _organizedData;
+        
         [SerializeField] private CsvDataReader _csvDataReader;
 
-        private void Start()
-        {
-            OrganizerData();
-        }
-        
-        private async void OrganizerData()
+        private async Task OrganizerData()
         {
             Dictionary<string, List<string>> dataGroups = await _csvDataReader.GetData();
             Dictionary<string, List<string>> uniqueDataGroups = GetUniqueDataGroups(dataGroups);
@@ -29,17 +28,17 @@ namespace DataVisualizer.Core.Scripts
             // Default layers for now
             string[] layers = dataGroups.Keys.ToArray();
             
-            Dictionary<string, Node> rootNodes2 = new Dictionary<string, Node>();
+            _organizedData = new Dictionary<string, Node>();
             
             foreach (string dataGroup in uniqueDataGroups[layers[0]])
             {
-                rootNodes2.Add(dataGroup, new Node());
+                _organizedData.Add(dataGroup, new Node());
             }
             
             for (int j = 0; j < rows; j++)
             {
                 string currentRootName = dataGroups[layers[0]][j];
-                Node currentRootNode = rootNodes2[currentRootName];
+                Node currentRootNode = _organizedData[currentRootName];
                 
                 for (int i = 1; i < layers.Length; i++)
                 {
@@ -64,6 +63,8 @@ namespace DataVisualizer.Core.Scripts
                     currentRootNode = currentRootNode.Children[currentNodeName];
                 }
             }
+
+            _dataOrganized = true;
         }
 
         private Dictionary<string, List<string>> GetUniqueDataGroups(Dictionary<string, List<string>> dataGroups)
@@ -76,6 +77,16 @@ namespace DataVisualizer.Core.Scripts
             }
 
             return uniqueDataGroups;
+        }
+
+        public async Task<Dictionary<string, Node>> GetOrganizedData()
+        {
+            if (!_dataOrganized)
+            {
+                await OrganizerData();
+            }
+
+            return _organizedData;
         }
     }
 }
