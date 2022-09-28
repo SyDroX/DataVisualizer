@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace DataVisualizer.Core.Scripts
 {
@@ -9,40 +10,60 @@ namespace DataVisualizer.Core.Scripts
     {
         public Dictionary<string, Node> Children = new Dictionary<string, Node>();
     }
-    
+
     public class DataOrganizer : MonoBehaviour
     {
         private bool _dataOrganized;
+        private bool _dataRead;
+        private string[] _layerOrder;
+        private Dictionary<string, List<string>> _dataGroups;
+        private Dictionary<string, List<string>> _uniqueDataGroups;
         private Dictionary<string, Node> _organizedData;
         
         [SerializeField] private CsvDataReader _csvDataReader;
+        [SerializeField] private LayerOrderUI _layerOrderUI;
 
-        private async Task OrganizerData()
+        public UnityEvent onLayersReordered;
+        
+        private void Start()
         {
-            Dictionary<string, List<string>> dataGroups = await _csvDataReader.GetData();
-            Dictionary<string, List<string>> uniqueDataGroups = GetUniqueDataGroups(dataGroups);
-            
+            _layerOrderUI.onLayersReordered.AddListener(OnLayersReordered);
+        }
+        
+        private void OnLayersReordered(string[] newLayerOrder)
+        {
+            _dataOrganized = false;
+            _layerOrder = newLayerOrder;
+            onLayersReordered?.Invoke();
+        }
+
+        private async Task ReadData()
+        {
+            _dataGroups = await _csvDataReader.GetData();
+            _uniqueDataGroups = GetUniqueDataGroups(_dataGroups);
+            _layerOrder = _dataGroups.Keys.ToArray();
+            _dataRead = true;
+        }
+        
+        private Task OrganizerData()
+        {
             // All data groups lengths are equal to the number of rows extracted from the CSV
-            int rows = dataGroups.First().Value.Count;
-            
-            // Default layers for now
-            string[] layers = dataGroups.Keys.ToArray();
-            
+            int rows = _dataGroups.First().Value.Count;
             _organizedData = new Dictionary<string, Node>();
             
-            foreach (string dataGroup in uniqueDataGroups[layers[0]])
+            foreach (string dataGroup in _uniqueDataGroups[_layerOrder[0]])
             {
                 _organizedData.Add(dataGroup, new Node());
             }
             
             for (int j = 0; j < rows; j++)
             {
-                string currentRootName = dataGroups[layers[0]][j];
+                string currentRootName = _dataGroups[_layerOrder[0]][j];
                 Node currentRootNode = _organizedData[currentRootName];
                 
-                for (int i = 1; i < layers.Length; i++)
+                for (int i = 1; i < _layerOrder.Length; i++)
                 {
-                    string currentNodeName = dataGroups[layers[i]][j];
+                    string currentNodeName = _dataGroups[_layerOrder[i]][j];
                     
                     if (!currentRootNode.Children.Keys.Contains(currentNodeName))
                     {
@@ -54,6 +75,8 @@ namespace DataVisualizer.Core.Scripts
             }
 
             _dataOrganized = true;
+            
+            return Task.CompletedTask;
         }
 
         private Dictionary<string, List<string>> GetUniqueDataGroups(Dictionary<string, List<string>> dataGroups)
@@ -70,6 +93,11 @@ namespace DataVisualizer.Core.Scripts
 
         public async Task<Dictionary<string, Node>> GetOrganizedData()
         {
+            if (!_dataRead)
+            {
+                await ReadData();
+            }
+            
             if (!_dataOrganized)
             {
                 await OrganizerData();
