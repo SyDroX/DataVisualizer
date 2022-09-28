@@ -1,5 +1,6 @@
 ﻿using DataVisualizer.Core.Scripts;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -15,6 +16,8 @@ public class VerticalDraggable : MonoBehaviour, IPointerDownHandler, IDragHandle
     
     public RectTransform currentTransform;
 
+    public UnityEvent onDragged;
+    
     public void OnPointerDown(PointerEventData eventData)
     {
         _currentPosition = currentTransform.position;
@@ -60,6 +63,7 @@ public class VerticalDraggable : MonoBehaviour, IPointerDownHandler, IDragHandle
         {
             currentTransform.position = _currentPosition;
             _oldPosition = _currentPosition;
+            onDragged?.Invoke();
         }
 
         StartCoroutine(UIHelpers.VerticalLayoutGroupCheat(_verticalLayoutGroup));
