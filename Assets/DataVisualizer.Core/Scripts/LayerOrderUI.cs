@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LayersUI : MonoBehaviour
+public class LayerOrderUI : MonoBehaviour
 {
     [SerializeField] private CsvDataReader _csvDataReader;
     [SerializeField] private GameObject _layersPanel;
@@ -13,7 +13,7 @@ public class LayersUI : MonoBehaviour
     
     private void Start()
     {
-        
+        ShowLayers();
     }
 
     private async void ShowLayers()
@@ -23,7 +23,8 @@ public class LayersUI : MonoBehaviour
         foreach (string layer in layers)
         {
             GameObject layerGameObject = Instantiate(_layerPrefab, _layerSortingPanel.transform);
-            
+            layerGameObject.name = layer;
+            layerGameObject.GetComponent<LayerUI>().Name = layer;
         }   
         
     }
