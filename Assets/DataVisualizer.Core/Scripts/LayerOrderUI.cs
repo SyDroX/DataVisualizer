@@ -11,10 +11,25 @@ public class LayerOrderUI : MonoBehaviour
     [SerializeField] private Button _showButton;
     [SerializeField] private Button _hideButton;
     [SerializeField] private LayerOrderHandler _layerOrder;
-
+    [SerializeField] private Vector2 _panelHiddenPosition;
     private void Start()
     {
+        _showButton.onClick.AddListener(OnShowButtonClick);
+        _hideButton.onClick.AddListener(OnHideButtonClick);
         ShowLayers();
+    }
+    private void OnShowButtonClick()
+    {
+        _layersPanel.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+        _hideButton.gameObject.SetActive(true);
+        _showButton.gameObject.SetActive(false);
+    }
+
+    private void OnHideButtonClick()
+    {
+        _layersPanel.GetComponent<RectTransform>().anchoredPosition = _panelHiddenPosition;
+        _hideButton.gameObject.SetActive(false);
+        _showButton.gameObject.SetActive(true);
     }
 
     private async void ShowLayers()
