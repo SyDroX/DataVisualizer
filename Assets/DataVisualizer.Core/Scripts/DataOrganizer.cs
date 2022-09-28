@@ -42,22 +42,11 @@ namespace DataVisualizer.Core.Scripts
                 
                 for (int i = 1; i < layers.Length; i++)
                 {
-                    bool hasChild = false;
                     string currentNodeName = dataGroups[layers[i]][j];
                     
-                    foreach (string childNode in currentRootNode.Children.Keys)
+                    if (!currentRootNode.Children.Keys.Contains(currentNodeName))
                     {
-                        string parentNodeName = dataGroups[layers[i - 1]][j];
-                        
-                        if (childNode == currentNodeName && currentRootName == parentNodeName)
-                        {
-                            hasChild = true;
-                        }
-                    }
-
-                    if (!hasChild)
-                    {
-                        currentRootNode.Children.Add(dataGroups[layers[i]][j], new Node());
+                        currentRootNode.Children.Add(currentNodeName, new Node());
                     }
                     
                     currentRootNode = currentRootNode.Children[currentNodeName];
