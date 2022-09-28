@@ -46,7 +46,7 @@ PlayerSettings:
   defaultScreenHeight: 1080
   defaultScreenWidthWeb: 960
   defaultScreenHeightWeb: 600
-  m_StereoRenderingPath: 2
+  m_StereoRenderingPath: 1
   m_ActiveColorSpace: 1
   m_MTRendering: 1
   mipStripping: 0
@@ -56,8 +56,8 @@ PlayerSettings:
   androidShowActivityIndicatorOnLoading: -1
   iosUseCustomAppBackgroundBehavior: 0
   iosAllowHTTPDownload: 1
-  allowedAutorotateToPortrait: 1
-  allowedAutorotateToPortraitUpsideDown: 1
+  allowedAutorotateToPortrait: 0
+  allowedAutorotateToPortraitUpsideDown: 0
   allowedAutorotateToLandscapeRight: 1
   allowedAutorotateToLandscapeLeft: 1
   useOSAutorotation: 1
@@ -135,7 +135,20 @@ PlayerSettings:
     16:9: 1
     Others: 1
   bundleVersion: 1.0
-  preloadedAssets: []
+  preloadedAssets:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 1504882993390259170, guid: d1e8fce82da91df4686dd490395bdc9c, type: 2}
+  - {fileID: 743964941253710435, guid: dded1c13a4865fd459910a954398d297, type: 2}
+  - {fileID: 4800000, guid: c9f956787b1d945e7b36e0516201fc76, type: 3}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -152,9 +165,10 @@ PlayerSettings:
   targetPixelDensity: 30
   resolutionScalingMode: 0
   resetResolutionOnWindowResize: 0
-  androidSupportedAspectRatio: 1
+  androidSupportedAspectRatio: 0
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
+    Android: com.KostyaSydoruk.DataVisualizer
     Standalone: com.KostyaSydoruk.DataVisualizer
   buildNumber:
     Standalone: 0
@@ -162,8 +176,8 @@ PlayerSettings:
     tvOS: 0
   overrideDefaultApplicationIdentifier: 0
   AndroidBundleVersionCode: 1
-  AndroidMinSdkVersion: 22
-  AndroidTargetSdkVersion: 0
+  AndroidMinSdkVersion: 24
+  AndroidTargetSdkVersion: 24
   AndroidPreferredInstallLocation: 1
   aotOptions: 
   stripEngineCode: 1
@@ -413,8 +427,8 @@ PlayerSettings:
     m_GraphicsJobMode: 0
   m_BuildTargetGraphicsAPIs:
   - m_BuildTarget: AndroidPlayer
-    m_APIs: 150000000b000000
-    m_Automatic: 1
+    m_APIs: 0b000000
+    m_Automatic: 0
   - m_BuildTarget: iOSSupport
     m_APIs: 10000000
     m_Automatic: 1
@@ -435,7 +449,7 @@ PlayerSettings:
   openGLRequireES32: 0
   m_TemplateCustomTags: {}
   mobileMTRendering:
-    Android: 1
+    Android: 0
     iPhone: 1
     tvOS: 1
   m_BuildTargetGroupLightmapEncodingQuality:
@@ -725,11 +739,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: DataVisualizer
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: 
+  metroCertificatePath: Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: KostyaSydoruk
+  metroCertificateIssuer: KostyaSydoruk
+  metroCertificateNotAfter: 80ddce267ff2d901
   metroApplicationDescription: Template_3D
   wsaImages: {}
   metroTileShortName: DataVisualizer
