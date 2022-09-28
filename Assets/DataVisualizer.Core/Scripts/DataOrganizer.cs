@@ -105,5 +105,15 @@ namespace DataVisualizer.Core.Scripts
 
             return _organizedData;
         }
+
+        public async Task<int> GetUniqueDataGroupsCountInLayer(int layer)
+        {
+            if (!_dataRead)
+            {
+                await ReadData();
+            }
+            
+            return _uniqueDataGroups[_layerOrder[layer]].Count;
+        } 
     }
 }
