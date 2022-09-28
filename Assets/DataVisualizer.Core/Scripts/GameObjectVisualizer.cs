@@ -84,6 +84,15 @@ namespace DataVisualizer.Core.Scripts
 
             return nodeInstance;
         }
+        private void DrawLineBetweenObjects(GameObject source, GameObject target)
+        {
+            LineRenderer nodeLinkLine = target.AddComponent<LineRenderer>();
+            nodeLinkLine.startWidth = 0.075f;
+            nodeLinkLine.endWidth = 0.075f;
+            nodeLinkLine.SetPosition(0, source.transform.position);
+            nodeLinkLine.SetPosition(1, target.transform.position);
+            nodeLinkLine.material.color = Color.black;
+        }
         
         private void VisualizeNode(Node rootNode, GameObject rootGameObject)
         {
