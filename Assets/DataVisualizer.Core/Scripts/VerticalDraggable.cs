@@ -66,6 +66,6 @@ public class VerticalDraggable : MonoBehaviour, IPointerDownHandler, IDragHandle
             onDragged?.Invoke();
         }
 
-        StartCoroutine(UIHelpers.VerticalLayoutGroupCheat(_verticalLayoutGroup));
+        StartCoroutine(BehaviourHelpers.ToggleComponentBehaviour(_verticalLayoutGroup));
     }
 }

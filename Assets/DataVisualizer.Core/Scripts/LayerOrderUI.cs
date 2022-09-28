@@ -29,7 +29,7 @@ public class LayerOrderUI : MonoBehaviour
             layerGameObject.GetComponent<VerticalDraggable>().onDragged.AddListener(OnLayersReordered);
         }
 
-        StartCoroutine(UIHelpers.VerticalLayoutGroupCheat(_layerSortingPanel.GetComponent<VerticalLayoutGroup>()));
+        StartCoroutine(BehaviourHelpers.ToggleComponentBehaviour(_layerSortingPanel.GetComponent<VerticalLayoutGroup>()));
     }
 
     private void OnLayersReordered()
