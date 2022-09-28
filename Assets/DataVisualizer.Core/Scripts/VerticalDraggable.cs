@@ -1,13 +1,16 @@
-﻿using UnityEngine;
+﻿using DataVisualizer.Core.Scripts;
+using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-
-public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
+public class VerticalDraggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
     private GameObject _mainContent;
     private Vector3 _currentPosition;
+    private Vector3 _oldPosition;
     private int _totalChild;
-
+    private VerticalLayoutGroup _verticalLayoutGroup;
+    
     [SerializeField] private int _minimumReorderDistance = 10;
     
     public RectTransform currentTransform;
@@ -16,6 +19,8 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
     {
         _currentPosition = currentTransform.position;
         _mainContent = currentTransform.parent.gameObject;
+        _verticalLayoutGroup = _mainContent.GetComponent<VerticalLayoutGroup>();
+        _oldPosition = _currentPosition;
         _totalChild = _mainContent.transform.childCount;
     }
 
@@ -51,6 +56,12 @@ public class Draggable : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoin
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        currentTransform.position = _currentPosition;
+        if (_oldPosition != _currentPosition)
+        {
+            currentTransform.position = _currentPosition;
+            _oldPosition = _currentPosition;
+        }
+
+        StartCoroutine(UIHelpers.VerticalLayoutGroupCheat(_verticalLayoutGroup));
     }
 }

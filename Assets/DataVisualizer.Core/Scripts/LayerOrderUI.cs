@@ -1,4 +1,5 @@
 using System.Collections;
+using DataVisualizer.Core.Scripts;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,8 +11,7 @@ public class LayerOrderUI : MonoBehaviour
     [SerializeField] private GameObject _layerPrefab;
     [SerializeField] private Button _showButton;
     [SerializeField] private Button _hideButton;
-    
-    
+
     private void Start()
     {
         ShowLayers();
@@ -28,14 +28,6 @@ public class LayerOrderUI : MonoBehaviour
             layerGameObject.GetComponent<LayerUI>().Name = layer;
         }
 
-        StartCoroutine(VerticalLayoutGroupCheat());
+        StartCoroutine(UIHelpers.VerticalLayoutGroupCheat(_layerSortingPanel.GetComponent<VerticalLayoutGroup>()));
     }
-
-    private IEnumerator VerticalLayoutGroupCheat()
-    {
-        yield return new WaitForEndOfFrame();
-        
-        _layerSortingPanel.GetComponent<VerticalLayoutGroup>().enabled = false;
-    }
-    
 }
