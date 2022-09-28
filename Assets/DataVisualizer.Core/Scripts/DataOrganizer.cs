@@ -4,116 +4,113 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace DataVisualizer.Core.Scripts
-{
     public class Node 
     {
         public Dictionary<string, Node> Children = new Dictionary<string, Node>();
     }
 
-    public class DataOrganizer : MonoBehaviour
+public class DataOrganizer : MonoBehaviour
+{
+    private bool _dataOrganized;
+    private bool _dataRead;
+    private string[] _layerOrder;
+    private Dictionary<string, List<string>> _dataGroups;
+    private Dictionary<string, List<string>> _uniqueDataGroups;
+    private Dictionary<string, Node> _organizedData;
+
+    [SerializeField] private CsvDataReader _csvDataReader;
+    [SerializeField] private LayerOrderHandler _layerOrderHandler;
+
+    public UnityEvent onLayersReordered;
+
+    private void Start()
     {
-        private bool _dataOrganized;
-        private bool _dataRead;
-        private string[] _layerOrder;
-        private Dictionary<string, List<string>> _dataGroups;
-        private Dictionary<string, List<string>> _uniqueDataGroups;
-        private Dictionary<string, Node> _organizedData;
-        
-        [SerializeField] private CsvDataReader _csvDataReader;
-        [SerializeField] private LayerOrderHandler _layerOrderHandler;
+        _layerOrderHandler.onLayersReordered.AddListener(OnLayersReordered);
+    }
 
-        public UnityEvent onLayersReordered;
-        
-        private void Start()
+    private void OnLayersReordered(string[] newLayerOrder)
+    {
+        _dataOrganized = false;
+        _layerOrder = newLayerOrder;
+        onLayersReordered?.Invoke();
+    }
+
+    private async Task ReadData()
+    {
+        _dataGroups = await _csvDataReader.GetData();
+        _uniqueDataGroups = GetUniqueDataGroups(_dataGroups);
+        _layerOrder = _dataGroups.Keys.ToArray();
+        _dataRead = true;
+    }
+
+    private Task OrganizerData()
+    {
+        // All data groups lengths are equal to the number of rows extracted from the CSV
+        int rows = _dataGroups.First().Value.Count;
+        _organizedData = new Dictionary<string, Node>();
+
+        foreach (string dataGroup in _uniqueDataGroups[_layerOrder[0]])
         {
-            _layerOrderHandler.onLayersReordered.AddListener(OnLayersReordered);
-        }
-        
-        private void OnLayersReordered(string[] newLayerOrder)
-        {
-            _dataOrganized = false;
-            _layerOrder = newLayerOrder;
-            onLayersReordered?.Invoke();
+            _organizedData.Add(dataGroup, new Node());
         }
 
-        private async Task ReadData()
+        for (int j = 0; j < rows; j++)
         {
-            _dataGroups = await _csvDataReader.GetData();
-            _uniqueDataGroups = GetUniqueDataGroups(_dataGroups);
-            _layerOrder = _dataGroups.Keys.ToArray();
-            _dataRead = true;
-        }
-        
-        private Task OrganizerData()
-        {
-            // All data groups lengths are equal to the number of rows extracted from the CSV
-            int rows = _dataGroups.First().Value.Count;
-            _organizedData = new Dictionary<string, Node>();
-            
-            foreach (string dataGroup in _uniqueDataGroups[_layerOrder[0]])
+            string currentRootName = _dataGroups[_layerOrder[0]][j];
+            Node currentRootNode = _organizedData[currentRootName];
+
+            for (int i = 1; i < _layerOrder.Length; i++)
             {
-                _organizedData.Add(dataGroup, new Node());
-            }
-            
-            for (int j = 0; j < rows; j++)
-            {
-                string currentRootName = _dataGroups[_layerOrder[0]][j];
-                Node currentRootNode = _organizedData[currentRootName];
-                
-                for (int i = 1; i < _layerOrder.Length; i++)
+                string currentNodeName = _dataGroups[_layerOrder[i]][j];
+
+                if (!currentRootNode.Children.Keys.Contains(currentNodeName))
                 {
-                    string currentNodeName = _dataGroups[_layerOrder[i]][j];
-                    
-                    if (!currentRootNode.Children.Keys.Contains(currentNodeName))
-                    {
-                        currentRootNode.Children.Add(currentNodeName, new Node());
-                    }
-                    
-                    currentRootNode = currentRootNode.Children[currentNodeName];
+                    currentRootNode.Children.Add(currentNodeName, new Node());
                 }
-            }
 
-            _dataOrganized = true;
-            
-            return Task.CompletedTask;
+                currentRootNode = currentRootNode.Children[currentNodeName];
+            }
         }
 
-        private Dictionary<string, List<string>> GetUniqueDataGroups(Dictionary<string, List<string>> dataGroups)
-        {
-            Dictionary<string, List<string>> uniqueDataGroups = new Dictionary<string, List<string>>();
-            
-            foreach (string groupName in dataGroups.Keys)
-            {
-                uniqueDataGroups.Add(groupName, dataGroups[groupName].Distinct().ToList());
-            }
+        _dataOrganized = true;
 
-            return uniqueDataGroups;
+        return Task.CompletedTask;
+    }
+
+    private Dictionary<string, List<string>> GetUniqueDataGroups(Dictionary<string, List<string>> dataGroups)
+    {
+        Dictionary<string, List<string>> uniqueDataGroups = new Dictionary<string, List<string>>();
+
+        foreach (string groupName in dataGroups.Keys)
+        {
+            uniqueDataGroups.Add(groupName, dataGroups[groupName].Distinct().ToList());
         }
 
-        public async Task<Dictionary<string, Node>> GetOrganizedData()
-        {
-            if (!_dataRead)
-            {
-                await ReadData();
-            }
-            
-            if (!_dataOrganized)
-            {
-                await OrganizerData();
-            }
+        return uniqueDataGroups;
+    }
 
-            return _organizedData;
+    public async Task<Dictionary<string, Node>> GetOrganizedData()
+    {
+        if (!_dataRead)
+        {
+            await ReadData();
         }
 
-        public async Task<int> GetUniqueDataGroupsCountInLayer(int layer)
+        if (!_dataOrganized)
         {
-            if (!_dataRead)
-            {
-                await ReadData();
-            }
-            
-            return _uniqueDataGroups[_layerOrder[layer]].Count;
-        } 
+            await OrganizerData();
+        }
+
+        return _organizedData;
+    }
+
+    public async Task<int> GetUniqueDataGroupsCountInLayer(int layer)
+    {
+        if (!_dataRead)
+        {
+            await ReadData();
+        }
+
+        return _uniqueDataGroups[_layerOrder[layer]].Count;
     }
 }

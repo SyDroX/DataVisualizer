@@ -1,4 +1,3 @@
-using DataVisualizer.Core.Scripts;
 using UnityEngine;
 using UnityEngine.UI;
 
