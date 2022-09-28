@@ -1,6 +1,6 @@
-using System.Collections;
 using DataVisualizer.Core.Scripts;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class LayerOrderUI : MonoBehaviour
@@ -12,6 +12,8 @@ public class LayerOrderUI : MonoBehaviour
     [SerializeField] private Button _showButton;
     [SerializeField] private Button _hideButton;
 
+    public UnityEvent<string[]> onLayersReordered;
+    
     private void Start()
     {
         ShowLayers();
@@ -26,8 +28,22 @@ public class LayerOrderUI : MonoBehaviour
             GameObject layerGameObject = Instantiate(_layerPrefab, _layerSortingPanel.transform);
             layerGameObject.name = layer;
             layerGameObject.GetComponent<LayerUI>().Name = layer;
+            layerGameObject.GetComponent<VerticalDraggable>().onDragged.AddListener(OnLayersReordered);
         }
 
         StartCoroutine(UIHelpers.VerticalLayoutGroupCheat(_layerSortingPanel.GetComponent<VerticalLayoutGroup>()));
     }
+
+    private void OnLayersReordered()
+    {
+        string[] newLayerOrder = new string[_layerSortingPanel.transform.childCount];
+        
+        for (int i = 0; i < _layerSortingPanel.transform.childCount; i++)
+        {
+            newLayerOrder[i] = _layerSortingPanel.transform.GetChild(i).name;
+        }
+        
+        onLayersReordered?.Invoke(newLayerOrder);
+    }
+    
 }
