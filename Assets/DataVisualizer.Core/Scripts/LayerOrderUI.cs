@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,7 +26,16 @@ public class LayerOrderUI : MonoBehaviour
             GameObject layerGameObject = Instantiate(_layerPrefab, _layerSortingPanel.transform);
             layerGameObject.name = layer;
             layerGameObject.GetComponent<LayerUI>().Name = layer;
-        }   
-        
+        }
+
+        StartCoroutine(VerticalLayoutGroupCheat());
     }
+
+    private IEnumerator VerticalLayoutGroupCheat()
+    {
+        yield return new WaitForEndOfFrame();
+        
+        _layerSortingPanel.GetComponent<VerticalLayoutGroup>().enabled = false;
+    }
+    
 }
