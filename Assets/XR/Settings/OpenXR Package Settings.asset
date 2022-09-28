@@ -116,7 +116,7 @@ MonoBehaviour:
   - {fileID: -6476586405681036980}
   - {fileID: -2681697342651841727}
   m_renderMode: 1
-  m_depthSubmissionMode: 1
+  m_depthSubmissionMode: 2
 --- !u!114 &-6476586405681036980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -629,7 +629,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f928d0d73a35f294fbe357ca17aa3547, type: 3}
   m_Name: MicrosoftHandInteraction Standalone
   m_EditorClassIdentifier: 
-  m_enabled: 0
+  m_enabled: 1
   nameUi: Microsoft Hand Interaction Profile
   version: 0.0.1
   featureIdInternal: com.unity.openxr.feature.input.handtracking
