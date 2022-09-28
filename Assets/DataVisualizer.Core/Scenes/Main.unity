@@ -481,7 +481,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_AdditionalShaderChannelsFlag: 1
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1280,7 +1280,7 @@ MonoBehaviour:
   _layerPrefab: {fileID: 2831120983329556503, guid: 62cdaccc4d8d5b64ba78f434a3aa845f, type: 3}
   _showButton: {fileID: 1718669634}
   _hideButton: {fileID: 1549834564}
-  _layerOrder: {fileID: 0}
+  _layerOrder: {fileID: 1849851997}
 --- !u!114 &1780778481
 MonoBehaviour:
   m_ObjectHideFlags: 0
