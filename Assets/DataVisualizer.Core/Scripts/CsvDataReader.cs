@@ -8,6 +8,7 @@ public class CsvDataReader : MonoBehaviour
     private const string DefaultFileName = "Data.csv";
 
     private Dictionary<string, List<string>> _dataGroups;
+    private string[] _layers;
     private bool _dataReady;
     
     [SerializeField] private string _filePath;
@@ -27,12 +28,12 @@ public class CsvDataReader : MonoBehaviour
     private void ConvertToData(string csvData)
     {
         string[] rows = csvData.Split("\r\n");
-        string[] groups = rows[0].Split(',');
+        _layers = rows[0].Split(',');
         _dataGroups = new Dictionary<string, List<string>>();
 
-        foreach (string group in groups)
+        foreach (string layer in _layers)
         {
-            _dataGroups.Add(group, new List<string>());
+            _dataGroups.Add(layer, new List<string>());
         }
 
         for (int i = 1; i < rows.Length; i++)
@@ -41,7 +42,7 @@ public class CsvDataReader : MonoBehaviour
 
             for (int j = 0; j < rowColumns.Length; j++)
             {
-                _dataGroups[groups[j]].Add(rowColumns[j]);
+                _dataGroups[_layers[j]].Add(rowColumns[j]);
             }
         }
 
@@ -56,5 +57,15 @@ public class CsvDataReader : MonoBehaviour
         }
 
         return _dataGroups;
+    }
+
+    public async Task<string[]> GetLayers()
+    {
+        if (!_dataReady)
+        {
+            await ReadFile();
+        }
+
+        return _layers;
     }
 }
